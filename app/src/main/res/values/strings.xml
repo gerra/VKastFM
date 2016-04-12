@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">VKastFM</string>
+    <string name="action_settings">Settings</string>
+    <integer name="com_vk_sdk_AppId">5364024</integer>
+    <string name="lastApiKey">396f97727a09b2504e6ddc720a9ab002</string>
+    <string name="lastSecret">838c45c99cf65f646859034878f4f7dd</string>
+
+    <string name="loginStep1">Step 1</string>
+    <string name="loginStep2">Step 2</string>
+
+    <string name="progressTitle">@string/app_name</string>
+    <string name="progressMessage">Processing…</string>
+</resources>
