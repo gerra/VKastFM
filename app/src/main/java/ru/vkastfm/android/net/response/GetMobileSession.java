@@ -1,8 +1,6 @@
 package ru.vkastfm.android.net.response;
 
-/**
- * Created by german on 09.04.16.
- */
+@SuppressWarnings("unused")
 public class GetMobileSession {
     public static class MobileSession {
         private String name;

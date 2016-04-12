@@ -1,15 +1,12 @@
 package ru.vkastfm.android.net;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import okhttp3.HttpUrl;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -22,9 +19,6 @@ import ru.vkastfm.android.net.response.GetTopArtists;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by german on 09.04.16.
- */
 public class RestClient {
     private static final String TAG = RestClient.class.getSimpleName();
 
@@ -50,21 +44,18 @@ public class RestClient {
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
-                .addInterceptor(new Interceptor() {
-                    @Override
-                    public Response intercept(Chain chain) throws IOException {
-                        Request request = chain.request();
-                        String apiKey = TheApp.getInstance().getString(R.string.lastApiKey);
-                        HttpUrl.Builder urlBuilder = request.url().newBuilder()
-                                .addQueryParameter("api_key", apiKey)
-                                .addQueryParameter("format", "json");
-                        String lastSessionKey = DataHelper.getLastSessionKey();
-                        if (lastSessionKey != null) {
-                            urlBuilder.addQueryParameter("sk", lastSessionKey);
-                        }
-                        request = request.newBuilder().url(urlBuilder.build()).build();
-                        return chain.proceed(request);
+                .addInterceptor(chain -> {
+                    Request request = chain.request();
+                    String apiKey = TheApp.getInstance().getString(R.string.lastApiKey);
+                    HttpUrl.Builder urlBuilder = request.url().newBuilder()
+                            .addQueryParameter("api_key", apiKey)
+                            .addQueryParameter("format", "json");
+                    String lastSessionKey = DataHelper.getLastSessionKey();
+                    if (lastSessionKey != null) {
+                        urlBuilder.addQueryParameter("sk", lastSessionKey);
                     }
+                    request = request.newBuilder().url(urlBuilder.build()).build();
+                    return chain.proceed(request);
                 })
                 .build();
         Retrofit retrofit = new Retrofit.Builder()

@@ -14,13 +14,8 @@ import retrofit2.adapter.rxjava.HttpException;
 import ru.vkastfm.android.DataHelper;
 import ru.vkastfm.android.R;
 import ru.vkastfm.android.net.RestClient;
-import ru.vkastfm.android.net.response.GetMobileSession;
 import rx.Subscription;
-import rx.functions.Action1;
 
-/**
- * Created by german on 09.04.16.
- */
 public class LastLoginFragment extends LoginFragment {
     public static final String TAG = LastLoginFragment.class.getSimpleName();
 
@@ -45,35 +40,26 @@ public class LastLoginFragment extends LoginFragment {
     @Override
     public void onResume() {
         super.onResume();
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String lastLogin = loginEditText.getText().toString();
-                String lastPassword = passwordEditText.getText().toString();
-                showProgressDialog();
-                loginSubscription = RestClient.getInstance()
-                        .authorizeInLast(lastLogin, lastPassword)
-                        .subscribe(new Action1<GetMobileSession>() {
-                            @Override
-                            public void call(GetMobileSession getMobileSession) {
-                                hideProgressDialog();
-                                DataHelper.saveLastApiKey(getMobileSession.getSession().getKey());
+        loginButton.setOnClickListener(v -> {
+            String lastLogin = loginEditText.getText().toString();
+            String lastPassword = passwordEditText.getText().toString();
+            showProgressDialog();
+            loginSubscription = RestClient.getInstance()
+                    .authorizeInLast(lastLogin, lastPassword)
+                    .subscribe(getMobileSession -> {
+                        hideProgressDialog();
+                        DataHelper.saveLastApiKey(getMobileSession.getSession().getKey());
+                    }, throwable -> {
+                        hideProgressDialog();
+                        if (throwable instanceof HttpException) {
+                            HttpException httpThrowable = (HttpException) throwable;
+                            try {
+                                Log.e(TAG, httpThrowable.response().errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                        }, new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                hideProgressDialog();
-                                if (throwable instanceof HttpException) {
-                                    HttpException httpThrowable = (HttpException) throwable;
-                                    try {
-                                        Log.e(TAG, httpThrowable.response().errorBody().string());
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                        });
-            }
+                        }
+                    });
         });
     }
 

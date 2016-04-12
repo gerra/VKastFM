@@ -7,9 +7,7 @@ import java.util.List;
 
 import ru.vkastfm.android.model.last.Artist;
 
-/**
- * Created by german on 12.04.16.
- */
+@SuppressWarnings("unused")
 public class GetTopArtists {
     private static class Artists {
         private static class Attr {

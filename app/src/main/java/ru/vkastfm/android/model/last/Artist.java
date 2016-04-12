@@ -4,9 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-/**
- * Created by german on 12.04.16.
- */
+@SuppressWarnings("unused")
 public class Artist {
     private String name;
     @SerializedName("playcount")

@@ -5,9 +5,6 @@ import android.support.v4.app.Fragment;
 
 import ru.vkastfm.android.fragment.dialog.ProgressDialogFragment;
 
-/**
- * Created by german on 09.04.16.
- */
 public abstract class BaseFragment extends Fragment {
 
     protected void showProgressDialog() {

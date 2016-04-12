@@ -7,9 +7,6 @@ import ru.vkastfm.android.net.response.GetMobileSession;
 import ru.vkastfm.android.net.response.GetTopArtists;
 import rx.Observable;
 
-/**
- * Created by german on 09.04.16.
- */
 public interface LastService {
 
     @POST("/2.0/")

@@ -2,9 +2,6 @@ package ru.vkastfm.android;
 
 import android.support.annotation.Nullable;
 
-/**
- * Created by german on 09.04.16.
- */
 public class DataHelper {
     private static final String LAST_SESSION_KEY = "LAST_SESSION_KEY";
 

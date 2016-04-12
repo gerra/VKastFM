@@ -17,9 +17,6 @@ import ru.vkastfm.android.R;
 import ru.vkastfm.android.fragment.LastLoginFragment;
 import ru.vkastfm.android.fragment.VkLoginFragment;
 
-/**
- * Created by german on 04.04.16.
- */
 public class AuthorizationActivity extends AppCompatActivity {
     public static final String TAG = AuthorizationActivity.class.getSimpleName();
 

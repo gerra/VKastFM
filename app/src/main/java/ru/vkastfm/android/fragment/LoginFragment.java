@@ -7,9 +7,6 @@ import android.view.ViewGroup;
 
 import ru.vkastfm.android.R;
 
-/**
- * Created by german on 09.04.16.
- */
 public abstract class LoginFragment extends BaseFragment {
 
     protected View loginButton;

@@ -8,9 +8,6 @@ import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;
 
-/**
- * Created by german on 19.03.16.
- */
 public class TheApp extends Application {
 
     private static TheApp instance;
@@ -29,6 +26,7 @@ public class TheApp extends Application {
         super.onCreate();
         instance = this;
         VKSdk.initialize(this);
+        vkAccessTokenTracker.startTracking();
     }
 
     public static TheApp getInstance() {

@@ -8,18 +8,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.vk.sdk.VKAccessToken;
 
-import java.io.IOException;
-
-import retrofit2.adapter.rxjava.HttpException;
 import ru.vkastfm.android.DataHelper;
 import ru.vkastfm.android.R;
 import ru.vkastfm.android.net.RestClient;
-import ru.vkastfm.android.net.response.GetTopArtists;
-import rx.functions.Action1;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -32,31 +26,12 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-                RestClient.getInstance().getUserTopArtists("warrior_c")
-                        .subscribe(new Action1<GetTopArtists>() {
-                            @Override
-                            public void call(GetTopArtists response) {
-                                Log.d(TAG, response.getTopArtists().toString());
-                            }
-                        }, new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                if (throwable instanceof HttpException) {
-                                    HttpException httpThrowable = (HttpException) throwable;
-                                    try {
-                                        Log.e(TAG, httpThrowable.response().errorBody().string());
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                        });
-            }
+        fab.setOnClickListener(view -> {
+            RestClient.getInstance().getUserTopArtists("warrior_c")
+                    .subscribe(response -> {
+                        Log.d(TAG, response.getTopArtists().toString());
+                    }, throwable -> {
+                    });
         });
 
         if (VKAccessToken.currentToken() == null || DataHelper.getLastSessionKey() == null) {

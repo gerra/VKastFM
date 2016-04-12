@@ -8,9 +8,6 @@ import android.support.v4.app.DialogFragment;
 
 import ru.vkastfm.android.R;
 
-/**
- * Created by german on 09.04.16.
- */
 public class ProgressDialogFragment extends DialogFragment {
     public static final String TAG = ProgressDialogFragment.class.getSimpleName();
 
