@@ -14,7 +14,7 @@ import com.vk.sdk.api.VKError;
 
 import ru.vkastfm.android.DataHelper;
 import ru.vkastfm.android.R;
-import ru.vkastfm.android.fragment.LastLoginFragment;
+import ru.vkastfm.android.fragment.LastFmLoginFragment;
 import ru.vkastfm.android.fragment.VkLoginFragment;
 
 public class AuthorizationActivity extends AppCompatActivity {
@@ -26,8 +26,8 @@ public class AuthorizationActivity extends AppCompatActivity {
         setContentView(R.layout.frame_layout);
 
         if (savedInstanceState == null) {
-            if (DataHelper.getLastSessionKey() == null) {
-                openFragment(new LastLoginFragment(), LastLoginFragment.TAG);
+            if (DataHelper.getLastFmSessionKey() == null) {
+                openFragment(new LastFmLoginFragment(), LastFmLoginFragment.TAG);
             } else if (VKAccessToken.currentToken() == null) {
                 openFragment(new VkLoginFragment(), VkLoginFragment.TAG);
             }
@@ -41,7 +41,7 @@ public class AuthorizationActivity extends AppCompatActivity {
             @Override
             public void onResult(VKAccessToken res) {
                 Log.d(TAG, "VkLogin success");
-                onVkLogin();
+                onFinishLogin();
             }
 
             @Override
@@ -54,8 +54,18 @@ public class AuthorizationActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void onVkLogin() {
-        openFragment(new LastLoginFragment(), LastLoginFragment.TAG);
+    public void onLastFmLogin() {
+        if (VKAccessToken.currentToken() == null) {
+            openFragment(new VkLoginFragment(), VkLoginFragment.TAG);
+        } else {
+            onFinishLogin();
+        }
+    }
+
+    public void onFinishLogin() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     public void openFragment(Fragment fragment, String tag) {

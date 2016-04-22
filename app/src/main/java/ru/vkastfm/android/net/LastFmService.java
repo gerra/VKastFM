@@ -7,7 +7,7 @@ import ru.vkastfm.android.net.response.GetMobileSession;
 import ru.vkastfm.android.net.response.GetTopArtists;
 import rx.Observable;
 
-public interface LastService {
+public interface LastFmService {
 
     @POST("/2.0/")
     Observable<GetMobileSession> getMobileSession(@Query("method") String method,

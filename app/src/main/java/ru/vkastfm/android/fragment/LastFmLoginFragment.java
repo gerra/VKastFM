@@ -13,11 +13,13 @@ import java.io.IOException;
 import retrofit2.adapter.rxjava.HttpException;
 import ru.vkastfm.android.DataHelper;
 import ru.vkastfm.android.R;
+import ru.vkastfm.android.activity.AuthorizationActivity;
+import ru.vkastfm.android.fragment.base.LoginFragment;
 import ru.vkastfm.android.net.RestClient;
 import rx.Subscription;
 
-public class LastLoginFragment extends LoginFragment {
-    public static final String TAG = LastLoginFragment.class.getSimpleName();
+public class LastFmLoginFragment extends LoginFragment {
+    public static final String TAG = LastFmLoginFragment.class.getSimpleName();
 
     private Subscription loginSubscription;
     private EditText loginEditText;
@@ -41,14 +43,17 @@ public class LastLoginFragment extends LoginFragment {
     public void onResume() {
         super.onResume();
         loginButton.setOnClickListener(v -> {
-            String lastLogin = loginEditText.getText().toString();
-            String lastPassword = passwordEditText.getText().toString();
+            String lastFmLogin = loginEditText.getText().toString();
+            String lastFmPassword = passwordEditText.getText().toString();
             showProgressDialog();
             loginSubscription = RestClient.getInstance()
-                    .authorizeInLast(lastLogin, lastPassword)
+                    .authorizeInLastFm(lastFmLogin, lastFmPassword)
                     .subscribe(getMobileSession -> {
                         hideProgressDialog();
-                        DataHelper.saveLastApiKey(getMobileSession.getSession().getKey());
+                        DataHelper.saveLastFmApiKey(getMobileSession.getSession().getKey());
+                        if (getActivity() != null) {
+                            ((AuthorizationActivity) getActivity()).onLastFmLogin();
+                        }
                     }, throwable -> {
                         hideProgressDialog();
                         if (throwable instanceof HttpException) {
@@ -73,6 +78,6 @@ public class LastLoginFragment extends LoginFragment {
 
     @Override
     protected int getLayout() {
-        return R.layout.last_login_fragment;
+        return R.layout.last_fm_login_fragment;
     }
 }

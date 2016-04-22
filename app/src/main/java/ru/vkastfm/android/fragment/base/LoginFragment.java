@@ -1,4 +1,4 @@
-package ru.vkastfm.android.fragment;
+package ru.vkastfm.android.fragment.base;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

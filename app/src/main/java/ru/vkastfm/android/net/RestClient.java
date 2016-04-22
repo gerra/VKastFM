@@ -1,9 +1,5 @@
 package ru.vkastfm.android.net;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -14,6 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import ru.vkastfm.android.DataHelper;
 import ru.vkastfm.android.R;
 import ru.vkastfm.android.TheApp;
+import ru.vkastfm.android.Utils;
 import ru.vkastfm.android.net.response.GetMobileSession;
 import ru.vkastfm.android.net.response.GetTopArtists;
 import rx.Observable;
@@ -24,20 +21,8 @@ public class RestClient {
 
     public static final String BASE_URL = "https://ws.audioscrobbler.com/";
 
-    private LastService lastService;
+    private LastFmService lastFmService;
     private static RestClient instance;
-
-    private static String md5(String s) {
-        StringBuilder md5Builder = new StringBuilder();
-        try {
-            byte[] digest = MessageDigest.getInstance("MD5").digest(s.getBytes("UTF-8"));
-            for (byte b : digest) {
-                md5Builder.append(String.format("%02x", b & 0xff));
-            }
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException ignored) {
-        }
-        return md5Builder.toString();
-    }
 
     private RestClient() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
@@ -50,9 +35,9 @@ public class RestClient {
                     HttpUrl.Builder urlBuilder = request.url().newBuilder()
                             .addQueryParameter("api_key", apiKey)
                             .addQueryParameter("format", "json");
-                    String lastSessionKey = DataHelper.getLastSessionKey();
-                    if (lastSessionKey != null) {
-                        urlBuilder.addQueryParameter("sk", lastSessionKey);
+                    String lastFmSessionKey = DataHelper.getLastFmSessionKey();
+                    if (lastFmSessionKey != null) {
+                        urlBuilder.addQueryParameter("sk", lastFmSessionKey);
                     }
                     request = request.newBuilder().url(urlBuilder.build()).build();
                     return chain.proceed(request);
@@ -64,10 +49,10 @@ public class RestClient {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        lastService = retrofit.create(LastService.class);
+        lastFmService = retrofit.create(LastFmService.class);
     }
 
-    public Observable<GetMobileSession> authorizeInLast(String userName, String password) {
+    public Observable<GetMobileSession> authorizeInLastFm(String userName, String password) {
         String apiKey = TheApp.getInstance().getString(R.string.lastApiKey);
         String apiSecret = TheApp.getInstance().getString(R.string.lastSecret);
 
@@ -77,18 +62,22 @@ public class RestClient {
                 + "username" + userName
                 + apiSecret;
 
-        return lastService.getMobileSession("auth.getMobileSession", userName, password, md5(apiSig))
+        return lastFmService.getMobileSession("auth.getMobileSession", userName, password, Utils.md5(apiSig))
                 .subscribeOn(Schedulers.io());
     }
 
     public Observable<GetTopArtists> getUserTopArtists(String user) {
-        return lastService.getUserTopArtists("user.getTopArtists", user)
+        return lastFmService.getUserTopArtists("user.getTopArtists", user)
                 .subscribeOn(Schedulers.io());
     }
 
     public static RestClient getInstance() {
         if (instance == null) {
-            instance = new RestClient();
+            synchronized (RestClient.class) {
+                if (instance == null) {
+                    instance = new RestClient();
+                }
+            }
         }
         return instance;
     }

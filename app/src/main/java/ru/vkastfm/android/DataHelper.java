@@ -3,16 +3,16 @@ package ru.vkastfm.android;
 import android.support.annotation.Nullable;
 
 public class DataHelper {
-    private static final String LAST_SESSION_KEY = "LAST_SESSION_KEY";
+    private static final String LAST_FM_SESSION_KEY = "LAST_SESSION_KEY";
 
     @Nullable
-    public static String getLastSessionKey() {
-        return TheApp.getInstance().getPreferences().getString(LAST_SESSION_KEY, null);
+    public static String getLastFmSessionKey() {
+        return TheApp.getInstance().getPreferences().getString(LAST_FM_SESSION_KEY, null);
     }
 
-    public static void saveLastApiKey(String key) {
+    public static void saveLastFmApiKey(String key) {
         TheApp.getInstance().getPreferences().edit()
-                .putString(LAST_SESSION_KEY, key)
+                .putString(LAST_FM_SESSION_KEY, key)
                 .commit();
     }
 }

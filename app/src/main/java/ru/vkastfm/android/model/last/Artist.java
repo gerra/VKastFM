@@ -16,7 +16,19 @@ public class Artist {
     @SerializedName("image")
     private List<Image> images;
 
+    public Artist(String name) {
+        this.name = name;
+    }
+
     private static class Attr {
         int rank;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getLargeImageUrl() {
+        return images.get(2).getUrl();
     }
 }

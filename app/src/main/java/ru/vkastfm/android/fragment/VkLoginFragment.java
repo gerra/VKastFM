@@ -4,6 +4,7 @@ import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 
 import ru.vkastfm.android.R;
+import ru.vkastfm.android.fragment.base.LoginFragment;
 
 public class VkLoginFragment extends LoginFragment {
     public static final String TAG = VkLoginFragment.class.getSimpleName();

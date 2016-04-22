@@ -3,9 +3,10 @@ package ru.vkastfm.android.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,7 +14,7 @@ import com.vk.sdk.VKAccessToken;
 
 import ru.vkastfm.android.DataHelper;
 import ru.vkastfm.android.R;
-import ru.vkastfm.android.net.RestClient;
+import ru.vkastfm.android.fragment.LastFmArtistsFragment;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -27,17 +28,15 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
-            RestClient.getInstance().getUserTopArtists("warrior_c")
-                    .subscribe(response -> {
-                        Log.d(TAG, response.getTopArtists().toString());
-                    }, throwable -> {
-                    });
+
         });
 
-        if (VKAccessToken.currentToken() == null || DataHelper.getLastSessionKey() == null) {
+        if (VKAccessToken.currentToken() == null || DataHelper.getLastFmSessionKey() == null) {
             Intent intent = new Intent(this, AuthorizationActivity.class);
             startActivity(intent);
             finish();
+        } else {
+            openFragment(new LastFmArtistsFragment());
         }
     }
 
@@ -61,5 +60,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void openFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content, fragment).commit();
     }
 }
